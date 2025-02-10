@@ -118,3 +118,7 @@ msgstr ""
 msgctxt "#30024"
 msgid "Download captions when available"
 msgstr ""
+
+msgctxt "#30025"
+msgid "View channel"
+msgstr ""
