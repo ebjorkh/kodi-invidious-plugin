@@ -111,3 +111,7 @@ msgstr ""
 msgctxt "#30023"
 msgid "Save search history"
 msgstr ""
+
+msgctxt "#30024"
+msgid "Download captions when available"
+msgstr ""
