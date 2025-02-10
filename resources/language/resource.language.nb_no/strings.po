@@ -110,3 +110,7 @@ msgstr ""
 msgctxt "#30022"
 msgid "Proxy videos"
 msgstr "Bruk mellomtjener for videoer"
+
+msgctxt "#30023"
+msgid "Save search history"
+msgstr ""
