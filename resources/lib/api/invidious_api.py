@@ -15,6 +15,9 @@ from .types import (
 )
 
 
+class CaptionRateLimitedError(Exception): ...
+
+
 class InvidiousAPIClient:
     instance_url: str
     session: requests.Session
@@ -120,6 +123,14 @@ class InvidiousAPIClient:
     def fetch_subtitles(self, caption: Caption) -> bytes:
         response = self.session.get(f"{self.instance_url}{caption.url}")
         response.raise_for_status()
+        # Youtube kindly responds with a 200 when serving some html to inform the user they have been ratelimited
+        if response.content[:6] != b"WEBVTT":
+            xbmc.log(
+                f"Invalid captions returned for {caption.label}, instance likely ratelimited",
+                xbmc.LOGERROR,
+            )
+            raise CaptionRateLimitedError
+
         return response.content
 
     def search(self, *terms):

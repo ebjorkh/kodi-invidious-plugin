@@ -318,15 +318,19 @@ class InvidiousPlugin:
         # Kodi does not seems to support setting any metadata on captions aside from the filename.
         # https://forum.kodi.tv/showthread.php?tid=289090
         if video_info.captions:
+            xbmc.log(f"caption: {video_info.captions}", xbmc.LOGERROR)
             if self.download_subs:
                 sub_files = []
                 for caption in video_info.captions:
-                    filename = (
-                        f"{self.tmp_path}/subs/{video_info.id}.{caption.label}.vtt"
-                    )
-                    with xbmcvfs.File(filename, "w") as f:
-                        f.write(self.api_client.fetch_subtitles(caption))
-                    sub_files.append(filename)
+                    try:
+                        filename = (
+                            f"{self.tmp_path}/subs/{video_info.id}.{caption.label}.vtt"
+                        )
+                        with xbmcvfs.File(filename, "w") as f:
+                            f.write(self.api_client.fetch_subtitles(caption))
+                        sub_files.append(filename)
+                    except invidious_api.CaptionRateLimitedError:
+                        pass
                 listitem.setSubtitles(sub_files)
 
             else:
@@ -438,7 +442,7 @@ class InvidiousPlugin:
                     self.display_search_results(
                         self.api_client.fetch_subscribed_channels()
                     )
-                case ("trending", "popular"):
+                case "trending" | "popular":
                     self.display_search_results(
                         self.api_client.fetch_special_list(action)
                     )

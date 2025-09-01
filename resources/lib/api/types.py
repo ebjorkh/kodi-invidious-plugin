@@ -63,7 +63,12 @@ class VideoInfoResult(VideoSearchResult):
             **dataclasses.asdict(base_info),
             dash_url=item.get("dashUrl"),
             stream_urls=[s["url"] for s in item["formatStreams"]],
-            captions=[Caption.from_response(c) for c in item["captions"]],
+            captions=list(
+                filter(
+                    lambda c: "auto-generated" not in c.label,
+                    (Caption.from_response(c) for c in item["captions"]),
+                )
+            ),
         )
 
 
